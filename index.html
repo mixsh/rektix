@@ -8,8 +8,11 @@
         <script src="rektix.js"></script>
 
         <script>
-            sync({
-                'catCount': 123,
+            init(window, {
+                catCount: {
+                    type: Number,
+                    value: 123
+                },
             })
         </script>
     </body>

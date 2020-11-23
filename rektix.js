@@ -1,65 +1,35 @@
-let virtualDom = {}
-
-function read(id) {
-    let config = virtualDom[id]
-    return config ? config.value : undefined
-}
-
-function write(id, value) {
-    let config = virtualDom[id]
-
-    if (config) {
-        config.value = value
-        config.dirty = true
+function getValueByType(value, type) {
+    if (type === Number) {
+        return parseInt(value)
     }
 
-    throw `wrap: element with id ${id} not found`
+    return value
 }
 
-function wrap(id, value) {
+function wrap(scope, id, config) {
     let element = document.getElementById(id)
-
+    
     if (element == null) {
         throw `wrap: element with id ${id} not found`
     }
-    
-    // add to virtual dom
-    virtualDom[id] = {
-        id,
-        value,
-        element,
-        dirty: false,
-    }
 
-    element.value = value
-    
-    // bind change event
-    element.onchange = () => {
-        virtualDom[id].value = element.value
-        virtualDom[id].dirty = true
-    }
-}
-
-function loop() {
-    let interval = 100
-
-    setInterval(() => {
-        for (const id in virtualDom) {
-            let vDomElement = virtualDom[id]
-
-            if (vDomElement.dirty) {
-                vDomElement.element.value = vDomElement.value
-                vDomElement.dirty = false
-            }
+    Object.defineProperty (scope, id, {
+        get: function () { 
+            return scope[`_${id}`]
+        },
+        set: function (newVal) {
+            scope[`_${id}`] = newVal
+            element.value = newVal
         }
+    })
 
-    }, interval)
+    element.onchange = () => scope[id] = getValueByType(element.value, config.type)
+
+    scope[id] = getValueByType(config.value, config.type)
 }
 
-function sync(data) {
+function init(scope, data) {
     for (const id in data) {
-        wrap(id, data[id])
+        wrap(scope, id, data[id])
     }
-
-    loop()
 }
