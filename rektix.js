@@ -1,35 +1,37 @@
-function getValueByType(value, type) {
-    if (type === Number) {
-        return parseInt(value)
+class Rektix {
+    constructor() {
+        this.values = {}
     }
-
-    return value
-}
-
-function wrap(scope, id, config) {
-    let element = document.getElementById(id)
     
-    if (element == null) {
-        throw `wrap: element with id ${id} not found`
+    getValueByType(element) {
+        switch(element.type) {
+            case 'number': return parseInt(element.value)
+            default: return element.value
+        }
     }
 
-    Object.defineProperty (scope, id, {
-        get: function () { 
-            return scope[`_${id}`]
-        },
-        set: function (newVal) {
-            scope[`_${id}`] = newVal
-            element.value = newVal
-        }
-    })
+    bind(scope, element) {
+        const id = element.id
 
-    element.onchange = () => scope[id] = getValueByType(element.value, config.type)
+        Object.defineProperty(scope, id, {
+            get: () => this.values[id],
+            set: newVal => element.value = this.values[id] = newVal
+        })
 
-    scope[id] = getValueByType(config.value, config.type)
-}
+        element.onchange = () => scope[id] = this.getValueByType(element)
 
-function init(scope, data) {
-    for (const id in data) {
-        wrap(scope, id, data[id])
+        scope[id] = this.getValueByType(element)
+    }
+
+    bindTag(tag) {
+        let inputs = document.getElementsByTagName(tag)
+    
+        for (const input of inputs)
+            this.bind(scope, input)
+    }
+
+    init(scope) {
+        this.bindTag(scope, 'input')
+        this.bindTag(scope, 'select')
     }
 }

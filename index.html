@@ -3,17 +3,27 @@
     </head>
 
     <body>
-        <input type="text" id="catCount" />
-        
+        <div>
+            <input type="number" id="catCount" value="123" />
+        </div>
+
+        <div>
+            <input type="text" id="name" value="john" />
+        </div>
+
+        <div>
+            <select id="animals">
+                <option value="dolphin">Dolphin</option>
+                <option value="elephant">Elephant</option>
+                <option value="mouse">Mouse</option>
+            </select>
+        </div>
+
         <script src="rektix.js"></script>
 
         <script>
-            init(window, {
-                catCount: {
-                    type: Number,
-                    value: 123
-                },
-            })
+            let rektix = new Rektix()
+            rektix.init(window)
         </script>
     </body>
 </html>
