@@ -3,8 +3,7 @@ class Rektix {
         this.values = {}
         this.propScope = propScope
         
-        this.bindTag(domScope, 'input')
-        this.bindTag(domScope, 'select')
+        this.bindTags(domScope)
     }
     
     getValue(element) {
@@ -28,10 +27,18 @@ class Rektix {
         this.propScope[id] = this.getValue(element)
     }
 
-    bindTag(domScope, tag) {
-        let elements = domScope.getElementsByTagName(tag)
-    
-        for (const element of elements)
-            this.bind(element)
+    bindTags(domScope) {
+        let tags = ['input', 'select', 'textarea']
+
+        for (const tag of tags) {
+            let elements = domScope.getElementsByTagName(tag)
+        
+            for (const element of elements)
+                this.bind(element)
+        }
+    }
+
+    scopeEval(script) {
+        return Function('"use strict";return (' + script + ')').bind(this.propScope)();
     }
 }

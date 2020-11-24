@@ -4,7 +4,7 @@
 
     <body>
         <div>
-            <input type="number" id="catCount" value="123" />
+            <input type="number" id="catCount" value="523" />
         </div>
 
         <div>
@@ -12,11 +12,15 @@
         </div>
 
         <div>
-            <select id="animal">
+            <select id="animal" data-if="catCount > name">
                 <option value="dolphin">Dolphin</option>
                 <option value="elephant">Elephant</option>
                 <option value="mouse">Mouse</option>
             </select>
+        </div>
+
+        <div>
+            <textarea id="description" cols="30" rows="10">hmmm</textarea>
         </div>
 
         <script src="rektix.js"></script>
