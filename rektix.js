@@ -23,7 +23,7 @@ class Rektix {
         scope[id] = this.getValueByType(element)
     }
 
-    bindTag(tag) {
+    bindTag(scope, tag) {
         let inputs = document.getElementsByTagName(tag)
     
         for (const input of inputs)
@@ -32,6 +32,6 @@ class Rektix {
 
     init(scope) {
         this.bindTag(scope, 'input')
-        this.bindTag(scope, 'select')
+        // this.bindTag(scope, 'select')
     }
 }
