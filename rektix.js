@@ -1,37 +1,37 @@
 class Rektix {
-    constructor() {
+    constructor(domScope=document, propScope=window) {
         this.values = {}
+        this.propScope = propScope
+        
+        this.bindTag(domScope, 'input')
+        this.bindTag(domScope, 'select')
     }
     
-    getValueByType(element) {
-        switch(element.type) {
+    getValue(element) {
+        const type = element.dataset.type || element.type
+        switch(type) {
             case 'number': return parseInt(element.value)
             default: return element.value
         }
     }
 
-    bind(scope, element) {
+    bind(element) {
         const id = element.id
 
-        Object.defineProperty(scope, id, {
+        Object.defineProperty(this.propScope, id, {
             get: () => this.values[id],
             set: newVal => element.value = this.values[id] = newVal
         })
 
-        element.onchange = () => scope[id] = this.getValueByType(element)
+        element.onchange = () => this.propScope[id] = this.getValue(element)
 
-        scope[id] = this.getValueByType(element)
+        this.propScope[id] = this.getValue(element)
     }
 
-    bindTag(scope, tag) {
-        let inputs = document.getElementsByTagName(tag)
+    bindTag(domScope, tag) {
+        let elements = domScope.getElementsByTagName(tag)
     
-        for (const input of inputs)
-            this.bind(scope, input)
-    }
-
-    init(scope) {
-        this.bindTag(scope, 'input')
-        // this.bindTag(scope, 'select')
+        for (const element of elements)
+            this.bind(element)
     }
 }
