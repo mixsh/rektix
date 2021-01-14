@@ -1,4 +1,4 @@
-function _xilik(domScope, props) {
+function _xilik(props, domScope) {
     this.values = {}
     this.props = props != undefined ? props : {}
     this.domScope = domScope
@@ -64,4 +64,4 @@ _xilik.prototype.evalExpression = function(_expression) {
     let ret; with (this.props) eval(`ret = ${_expression}`); return ret
 }
 
-const xilik = (domScope=document, props) => new _xilik(domScope, props)
+const xilik = (props, domScope=document) => new _xilik(props, domScope)
