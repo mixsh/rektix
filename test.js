@@ -23,6 +23,8 @@ function run(config) {
         p.innerHTML += '\n' + error
         p.classList.add('red')
     }
+
+    wrapper.remove()
     
     const $testResultsWrapper = document.getElementById('test-results-wrapper')
     $testResultsWrapper.appendChild(p)
