@@ -3,7 +3,7 @@ class xilik {
         this.values = {}
         this.props = props
         
-        this.bindTags(domScope)
+        this.load(domScope)
     }
     
     getValue(element) {
@@ -35,7 +35,7 @@ class xilik {
         this.props[id] = this.getValue(element)
     }
 
-    bindTags(domScope) {
+    load(domScope) {
         let tags = ['input', 'select', 'textarea']
 
         for (const tag of tags) {
@@ -43,6 +43,13 @@ class xilik {
         
             for (const element of elements)
                 this.bind(element)
+        }
+
+        let conditionalWrappers = domScope.querySelectorAll('[data-x-if]')
+
+        for (const wrapper of conditionalWrappers) {
+            console.log('eita', wrapper.dataset.xIf)
+            console.log('hm', this.scopeEval(wrapper.dataset.xIf))
         }
     }
 
