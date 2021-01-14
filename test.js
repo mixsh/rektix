@@ -38,7 +38,7 @@ run({
     },
     test: (xilik, wrapper) => {
         xilik.props.theInput = 456
-        return xilik.props.theInput.toString() === wrapper.children.theInput.value
+        return xilik.props.theInput.toString() === wrapper.children.theInput.val
     }
 })
 
@@ -54,8 +54,7 @@ run({
     },
     test: (xilik, wrapper) => {
         const $input = wrapper.children.theInput
-        $input.value = 777
-        $input.dispatchEvent(new Event('change')) // todo: can this be avoided?
+        $input.val = 777
 
         return xilik.props.theInput.toString() === $input.value
     }
