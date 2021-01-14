@@ -47,7 +47,6 @@ _xilik.prototype.bindElements = function() {
 }
 
 _xilik.prototype.updateUI = function() {
-    console.log('updateUI', this.props)
     let conditionalWrappers = this.domScope.querySelectorAll('[data-x-if]')
 
     for (const wrapper of conditionalWrappers) {
