@@ -4,7 +4,7 @@
 
     <body>
         <div>
-            <input type="number" id="catCount" value="523" />
+            <input type="number" id="catCount" />
         </div>
 
         <div>
@@ -23,10 +23,16 @@
             <textarea id="description" cols="30" rows="10">hmmm</textarea>
         </div>
 
-        <script src="rektix.js"></script>
+        <script src="xilik.js"></script>
 
         <script>
-            let rektix = new Rektix()
+            let x = {
+                catCount: 132341
+            }
+
+            let xilik = new xilik(
+                domScope=document,
+                propScope=x)
         </script>
     </body>
 </html>
