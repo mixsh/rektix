@@ -8,7 +8,7 @@ function run(config) {
     p.appendChild(description)
     
     try {
-        const x = xilik(wrapper, config.props)
+        const x = xilik(config.props, wrapper)
 
         if (config.test(x, wrapper)) {
             p.classList.add('green')
@@ -28,6 +28,11 @@ function run(config) {
     $testResultsWrapper.appendChild(p)
 }
 
+function update(element, value) {
+    element.value = value
+    element.dispatchEvent(new Event('input'))
+}
+
 run({
     description: '$input.value should change after changing x.props.theInput',
     props: {
@@ -41,7 +46,7 @@ run({
     },
     test: (xilik, wrapper) => {
         xilik.props.theInput = 456
-        return xilik.props.theInput === wrapper.children.theInput.val
+        return xilik.props.theInput == wrapper.children.theInput.value
     }
 })
 
@@ -58,8 +63,8 @@ run({
     },
     test: (xilik, wrapper) => {
         const $input = wrapper.children.theInput
-        $input.val = 777
+        update($input, 777)
 
-        return xilik.props.theInput.toString() === $input.value
+        return xilik.props.theInput.toString() == $input.value
     }
 })
