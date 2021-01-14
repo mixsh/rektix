@@ -1,57 +1,68 @@
-class xilik {
-    constructor(domScope=document, props=window) {
-        this.values = {}
-        this.props = props
-        
-        this.load(domScope)
-    }
-    
-    getValue(element) {
-        const type = element.dataset.type || element.type
-        switch(type) {
-            case 'number': return parseInt(element.value)
-            default: return element.value
-        }
-    }
+function _xilik(domScope, props) {
+    this.values = {}
+    this.props = props != undefined ? props : {}
+    this.domScope = domScope
 
-    bind(element) {
-        const id = element.id
-
-        Object.defineProperty(this.props, id, {
-            get: () => this.values[id],
-            set: newVal => element.value = this.values[id] = newVal
-        })
-
-        element.onchange = () => this.props[id] = this.getValue(element)
-        
-        Object.defineProperty(element, 'val', {
-            get: () => this.getValue(element),
-            set: newVal => {
-                element.value = newVal
-                element.dispatchEvent(new Event('change'))
-            }
-        })
-
-        this.props[id] = this.getValue(element)
-    }
-
-    load(domScope) {
-        let tags = ['input', 'select', 'textarea']
-
-        for (const tag of tags) {
-            let elements = domScope.getElementsByTagName(tag)
-        
-            for (const element of elements)
-                this.bind(element)
-        }
-
-        let conditionalWrappers = domScope.querySelectorAll('[data-x-if]')
-
-        for (const wrapper of conditionalWrappers) {
-            console.log('eita', wrapper.dataset.xIf)
-            console.log('hm', this.scopeEval(wrapper.dataset.xIf))
-        }
-    }
-
-    scopeEval = script => Function(`"use strict";return (${script})`).bind(this.props)()
+    this.load()
 }
+    
+_xilik.prototype.getValue = function(element) {
+    const type = element.dataset.type || element.type
+    switch(type) {
+        case 'number': return parseInt(element.value)
+        default: return element.value
+    }
+}
+
+_xilik.prototype.bindElement = function(element) {
+    const id = element.id
+
+    element.oninput = () => {
+        this.props[id] = this.getValue(element)
+        this.updateUI()
+    }
+
+    Object.defineProperty(this.props, id, {
+        enumerable: true,
+
+        get: () => this.values[id],
+        set: newVal => {
+            this.values[id] = newVal
+            element.value = this.values[id] ? this.values[id] : ''
+        }
+    })
+
+    this.props[id] = this.getValue(element)
+}
+
+_xilik.prototype.bindElements = function() {
+    let tags = ['input', 'select', 'textarea']
+
+    for (const tag of tags) {
+        let elements = this.domScope.getElementsByTagName(tag)
+    
+        for (const element of elements)
+            this.bindElement(element)
+    }
+}
+
+_xilik.prototype.updateUI = function() {
+    console.log('updateUI', this.props)
+    let conditionalWrappers = this.domScope.querySelectorAll('[data-x-if]')
+
+    for (const wrapper of conditionalWrappers) {
+        const expression = wrapper.dataset.xIf
+        wrapper.style.display = this.evalExpression(expression) ? '' : 'none'
+    }
+}
+
+_xilik.prototype.load = function() {
+    this.bindElements()
+    this.updateUI()
+}
+
+_xilik.prototype.evalExpression = function(_expression) {
+    let ret; with (this.props) eval(`ret = ${_expression}`); return ret
+}
+
+const xilik = (domScope=document, props) => new _xilik(domScope, props)

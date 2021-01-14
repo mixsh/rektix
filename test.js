@@ -8,7 +8,9 @@ function run(config) {
     p.appendChild(description)
     
     try {
-        if (config.test(new xilik(wrapper, config.props), wrapper)) {
+        const x = xilik(wrapper, config.props)
+
+        if (config.test(x, wrapper)) {
             p.classList.add('green')
         }
         else {
