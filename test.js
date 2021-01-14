@@ -34,11 +34,12 @@ run({
     setup: wrapper => {
         const $input = document.createElement('input')
         $input.id = 'theInput'
+        $input.type = 'number'
         wrapper.appendChild($input)
     },
     test: (xilik, wrapper) => {
         xilik.props.theInput = 456
-        return xilik.props.theInput.toString() === wrapper.children.theInput.val
+        return xilik.props.theInput === wrapper.children.theInput.val
     }
 })
 
@@ -50,6 +51,7 @@ run({
     setup: wrapper => {
         const $input = document.createElement('input')
         $input.id = 'theInput'
+        $input.type = 'number'
         wrapper.appendChild($input)
     },
     test: (xilik, wrapper) => {

@@ -25,7 +25,7 @@ class xilik {
         element.onchange = () => this.props[id] = this.getValue(element)
         
         Object.defineProperty(element, 'val', {
-            get: () => element.value,
+            get: () => this.getValue(element),
             set: newVal => {
                 element.value = newVal
                 element.dispatchEvent(new Event('change'))
