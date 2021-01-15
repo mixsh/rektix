@@ -25,11 +25,18 @@
             <textarea id="description" cols="30" rows="10">hmmm</textarea>
         </div>
 
+        <ul>
+            <li data-x-array="currencies" data-x-item="currency">
+                <span data-x-value="currency"></span>
+            </li>
+        </ul>
+
         <script src="xilik.js"></script>
 
         <script>
             const props = {
-                counter1: 132
+                counter1: 132,
+                currencies: ['BRL', 'USD', 'EUR'],
             }
             
             xilik(props)

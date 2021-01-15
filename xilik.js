@@ -1,10 +1,15 @@
 const xilik = (function() {
     function _xilik(props, domScope) {
         this.values = {}
+        this.references = {}
         this.props = props != undefined ? props : {}
         this.domScope = domScope
     
         this.load()
+    }
+
+    _xilik.prototype.generateId = function() {
+        return '_' + Math.random().toString(36).substr(2, 9);
     }
         
     _xilik.prototype.getValue = function(element) {
@@ -46,14 +51,53 @@ const xilik = (function() {
                 this.bindElement(element)
         }
     }
+
+    _xilik.prototype.updateConditionals = function() {
+        let elements = this.domScope.querySelectorAll('[data-x-if]')
+    
+        for (const element of elements) {
+            const expression = element.dataset.xIf
+            element.style.display = this.evalExpression(expression) ? '' : 'none'
+        }
+    }
+
+    _xilik.prototype.updateLoops = function() {
+        let elements = this.domScope.querySelectorAll('[data-x-array]')
+    
+        for (const element of elements) {
+            const arrayName = element.dataset.xArray
+            const arrayItemName = element.dataset.xItem
+
+            let id = element.dataset.xId
+
+            if (!id) {
+                id = this.generateId()
+                this.references[id] = element
+            }
+
+            const array = this.props[arrayName]
+
+            for (const item of array) {
+                const clone = element.cloneNode(deep=true)
+
+                const valueElements = clone.querySelectorAll('[data-x-value]')
+
+                for (const valueElement of valueElements) {
+                    if (valueElement.dataset.xValue === arrayItemName) {
+                        valueElement.innerHTML = item
+                    }
+                }
+
+                element.parentNode.insertBefore(clone, element)
+            }
+
+            element.style.display = 'none'
+        }
+    }
     
     _xilik.prototype.updateUI = function() {
-        let conditionalWrappers = this.domScope.querySelectorAll('[data-x-if]')
-    
-        for (const wrapper of conditionalWrappers) {
-            const expression = wrapper.dataset.xIf
-            wrapper.style.display = this.evalExpression(expression) ? '' : 'none'
-        }
+        this.updateConditionals()
+        this.updateLoops()
     }
     
     _xilik.prototype.load = function() {
